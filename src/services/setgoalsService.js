@@ -1,5 +1,5 @@
 import createDbConnection from "../database/db.js"
-import writetoDB from "../utils/dbUtils.js"
+import { writetoDB } from "../utils/dbUtils.js"
 
 const createGoal = async (newGoal) => {
     const goalToInsert = {
@@ -12,9 +12,15 @@ const createGoal = async (newGoal) => {
         const db = await createDbConnection();
         await writetoDB(db, "goals", goalToInsert);
 
+        return goalToInsert
+
     } catch(error) {
         console.error(`Error connecting to database: ${error}`)
     }
 };
 
-export default { createGoal }
+// update a certain goals fields: description, priority, status, and all other that goes along like updated_at
+
+export default {
+    createGoal
+ };

@@ -3,8 +3,6 @@ import setgoalsController from '../controllers/setgoalsController.js'
 
 const router = Router();
 
-router.get("/", setgoalsController.getAllGoals);
-
-router.post("/api/setgoal", setgoalsController.setGoals);
+router.post("/goal", setgoalsController.setGoals);
 
 export default router;

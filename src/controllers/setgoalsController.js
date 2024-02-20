@@ -1,13 +1,10 @@
 import setgoalsService from "../services/setgoalsService.js";
 
-const getAllGoals = (req, res) => {
-    res.send("Getting all goals")
-};
-
-const setGoals = (req, res) => {
+const setGoals = async (req, res) => {
     const { body } = req;
 
     if (
+        !body.user_id ||
         !body.title ||
         !body.description ||
         !body.start_date ||
@@ -27,6 +24,7 @@ const setGoals = (req, res) => {
     }
 
     const newGoal = {
+        user_id: body.user_id,
         title: body.title,
         description: body.description,
         start_date: body.start_date,
@@ -36,7 +34,7 @@ const setGoals = (req, res) => {
     };
 
     try {
-        const createdGoal = setgoalsService.createGoal(newGoal);
+        const createdGoal = await setgoalsService.createGoal(newGoal);
         res.status(201).send({status: "OK", data: createdGoal});
 
     } catch(error) {
@@ -47,6 +45,5 @@ const setGoals = (req, res) => {
 };
 
 export default {
-    getAllGoals,
     setGoals
 };

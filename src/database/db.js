@@ -1,8 +1,7 @@
 import fs from 'fs';
 import sqlite3 from 'sqlite3';
 
-const dbPath = "./performance.db";
-
+const dbPath = "./src/database/performance.db";
 
 /**
  * @returns db connection promise
@@ -54,16 +53,17 @@ function createTable(db) {
       `
       CREATE TABLE IF NOT EXISTS goals (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT NOT NULL,
         title TEXT NOT NULL,
         description TEXT,
         start_date DATE,
         target_date DATE,
-        priority INTEGER NOT NULL CHECK (priority >= 1 AND priority <= 3), -- Enforce valid priority range
-        status TEXT NOT NULL CHECK (status IN ('Active', 'Completed', 'Failed')), -- Restrict status options
+        priority INTEGER NOT NULL CHECK (priority >= 1 AND priority <= 3),
+        status TEXT NOT NULL CHECK (status IN ('Active', 'Completed', 'Failed')),
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );`
     );
 };
 
-export default createDbConnection();
+export default createDbConnection;
