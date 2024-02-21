@@ -1,12 +1,13 @@
 
 /**
+ * Writes data to a SQLite database
  *
- * @param {*} db
- * @param {*} table
- * @param {*} newEntry: object
- * @returns
+ * @param {sqlite3} db - SQLite database
+ * @param {string} table - Table to insert data in
+ * @param {object} newEntry - Object where keys are columns names and values is data to be inserted
+ * @returns {promise<Array>} - A promise that resolves with null when inserting in the database is successful
  */
-const writetoDB = (db, table, newEntry) => {
+export function writetoDB(db, table, newEntry) {
     const fields = Object.keys(newEntry);
     const values = Object.values(newEntry);
     const placeholders = fields.map(_field => "?").join(", ");
@@ -25,48 +26,25 @@ const writetoDB = (db, table, newEntry) => {
 };
 
 /**
+ * Retrives data from a SQLite database
  *
- * @param {*} db: SQLite instance
- * @param {*} table: table to retrieve rows from
- * @param {*} desiredColumns: array of columns to be selected from the query.
- * @param {*} params: columns/values to replace the placeholders in the prepared statement.
+ * @param {sqlite3} db - SQLite instance
+ * @param {string} table - Table to retrieve rows from
+ * @param {Array} desiredColumns - Array of columns to be selected from the query
+ * @param {Array} params - Columns to replace the placeholders in the prepared statement
+ * @param {string} [whereClause=''] - Optional SQL statements to retrieve data from the database
+ * @returns {promise<Array>} - A promise that resolves with an array of retrieved rows
  */
-
-const retrievefromDB = (db, table, params, desiredColumns, whereClause = '') => {
+export function retrieveFromDB(db, table, params, desiredColumns, whereClause = '') {
     const sql = `SELECT ${desiredColumns.join(", ")} FROM ${table} ${whereClause}`;
-    const paramsQuery = [params];
 
     return new Promise((resolve, reject) => {
-        db.prepare(sql, (error, stmt) => {
-            if (error) {
-                reject(error);
+        db.all(sql, params, (err, rows) => {
+            if (err) {
+                reject(err);
             } else {
-                if (!stmt) {
-                    reject(new Error("Statement object is undefined."));
-                } else {
-                    stmt.run(paramsQuery, (error, rows) => {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            const allGoals = [];
-                            try {
-                                rows.forEach((row) => {
-                                    allGoals.push(row);
-                                });
-                                resolve(allGoals);
-                            } catch (error) {
-                                reject(error);
-                            }
-                        }
-                    });
-                }
+                resolve(rows);
             }
         });
     });
-};
-
-
-export {
-    writetoDB,
-    retrievefromDB
 };

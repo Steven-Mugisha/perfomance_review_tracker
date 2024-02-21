@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import getAllGoalsController from '../controllers/getgoalsController.js';
+import { getGoals } from '../controllers/getgoalsController.js';
 
 const router = Router();
 
-router.get("/:user_id/goals", getAllGoalsController.getGoals);
+router.get("/:user_id/goals", getGoals);
 
 export default router;

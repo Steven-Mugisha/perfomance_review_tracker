@@ -3,10 +3,6 @@ import sqlite3 from 'sqlite3';
 
 const dbPath = "./src/database/performance.db";
 
-/**
- * @returns db connection promise
- */
-
 const createDbConnection = () => {
     return new Promise((resolve, reject) =>  {
         let db;
@@ -44,8 +40,8 @@ const createDbConnection = () => {
 };
 
 /**
- * The createTable function is responsible for creating the table in the database.
- * @param {*} db: SQLite database instance
+ * Creates a table in the database
+ * @param {sqlite3} db - SQLite database instance
  */
 
 function createTable(db) {

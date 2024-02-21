@@ -1,7 +1,8 @@
-import getAllGoalsService from "../services/getgoalsService.js";
+import { getAllGoals } from "../services/getgoalsService.js";
 
-const getGoals = (req, res) => {
-    const {params: { user_id },} = req;
+export async function getGoals(req, res) {
+    const user_id = req.params.user_id;
+
     if (!user_id) {
         res
             .status(400)
@@ -12,15 +13,20 @@ const getGoals = (req, res) => {
     }
 
     try {
-        const allGoals = getAllGoalsService.getAllGoals(user_id)
-        res.send({status: "OK", data:allGoals});
+        const allGoals = await getAllGoals(user_id);
+
+        if (allGoals.length) {
+            res
+            .status(200)
+            .send({ status: "OK", data: allGoals});
+        } else {
+            res.send(`user: ${user_id} has no goals to retrieve...`);
+        }
+
     } catch (error) {
+        console.error(`Error retrieving ${user_id}'s goals: ${error}`);
         res
             .status(error?.status || 500)
-            .send({ status: "FAILED", data: { error: error?.message || error } })
+            .send({ status: "FAILED", data: { error: error?.message || error } });
     }
-};
-
-export default {
-    getGoals
 };
