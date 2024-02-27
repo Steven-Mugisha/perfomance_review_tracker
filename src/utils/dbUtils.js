@@ -1,4 +1,3 @@
-
 /**
  * Writes data to a SQLite database
  *
@@ -48,3 +47,9 @@ export function retrieveFromDB(db, table, params, desiredColumns, whereClause = 
         });
     });
 };
+
+/**
+ * Add notes about the progress toward achieving the goal
+ * Change status of the goal
+ */
+export function addNotes () {};

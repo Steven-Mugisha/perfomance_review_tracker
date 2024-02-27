@@ -44,6 +44,26 @@ const setGoals = async (req, res) => {
     };
 };
 
+const addNotes = async (req, res) => {
+    const {body} = req;
+
+    if (
+        !body.user_id ||
+        !body.notes
+    ) {
+        res
+            .status(400)
+            .send({
+                status: "FAILED",
+                data: {
+                    error: "One of the following keys is missing from the request body: title, description, start_date, target_date, priority, status.",
+                },
+        });
+        return;
+    }
+}
+
 export default {
-    setGoals
+    setGoals,
+    addNotes
 };
