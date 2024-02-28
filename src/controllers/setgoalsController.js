@@ -17,7 +17,7 @@ const setGoals = async (req, res) => {
             .send({
                 status: "FAILED",
                 data: {
-                    error: "One of the following keys is missing from the request body: title, description, start_date, target_date, priority, status.",
+                    err: "One of the following keys is missing from the request body: title, description, start_date, target_date, priority, status.",
                 },
         });
         return;
@@ -37,10 +37,10 @@ const setGoals = async (req, res) => {
         const createdGoal = await setgoalsService.createGoal(newGoal);
         res.status(201).send({status: "OK", data: createdGoal});
 
-    } catch(error) {
+    } catch(err) {
         res
-            .status(error?.status || 500)
-            .send({status: "FAILED", data: {error: error?.message || error}});
+            .status(err?.status || 500)
+            .send({status: "FAILED", data: {err: err?.message || err}});
     };
 };
 
@@ -56,10 +56,34 @@ const addNotes = async (req, res) => {
             .send({
                 status: "FAILED",
                 data: {
-                    error: "One of the following keys is missing from the request body: title, description, start_date, target_date, priority, status.",
+                    err: "One of the following keys is missing from the request body: title, description, start_date, target_date, priority, status.",
                 },
         });
         return;
+    }
+
+    let newStatus;
+    let notes;
+
+    try {
+        if (body.status !== undefined || body.status !== null) {
+            const adjStatus = {
+                status: body.status,
+                user_id: body.user_id,
+            }
+            newStatus = await setgoalsService.changeStatus(adjStatus)
+        } else {
+
+            const newNotes = {
+                notes: body.notes,
+            }
+            notes = await setgoalsService.addNotes(newNotes)
+            res.status(201).send({status: "OK", data: [newStatus, notes]});
+        }
+    } catch (err) {
+        res
+            .status(err.status || 500)
+            .send({status: "FAILED", data: {err: err?.message || err}});
     }
 }
 

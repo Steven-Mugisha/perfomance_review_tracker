@@ -1,6 +1,6 @@
 // import { nanoid } from 'nanoid'
 import createDbConnection from "../database/db.js"
-import { writetoDB } from "../utils/dbUtils.js"
+import { writetoDB, adjustStatus } from "../utils/dbUtils.js"
 
 const createGoal = async (newGoal) => {
     const goalToInsert = {
@@ -18,24 +18,36 @@ const createGoal = async (newGoal) => {
         return goalToInsert
 
     } catch(err) {
-        console.error(`Error connecting to database: ${error}`)
+        console.error(`Error connecting to database: ${err.message}`)
     }
 };
 
 const addNotes =  async (notes) => {
+
     try {
         let table = 'notes';
         const db = await createDbConnection(table);
         await writetoDB(db, "notes", notes)
 
     } catch (err) {
-
+        console.error(`Error adding a note to a goal ${err.message}`);
     }
 };
 
-// update a certain goals fields: description, priority, status, and all other that goes along like updated_at
+const changeStatus = async (adjStatus) => {
+
+    try {
+        let table = 'goals';
+        const db = await createDbConnection(table);
+        await adjustStatus(db, table, adjStatus)
+
+    } catch(err) {
+        console.error(`Error adjusting the goal status ${err.message}`);
+    }
+}
 
 export default {
     createGoal,
-    addNotes
+    addNotes,
+    changeStatus
  };

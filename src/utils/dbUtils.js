@@ -49,7 +49,23 @@ export function retrieveFromDB(db, table, params, desiredColumns, whereClause = 
 };
 
 /**
- * Add notes about the progress toward achieving the goal
- * Change status of the goal
+ * Adjust the status.
+ *
  */
-export function addNotes () {};
+export function adjustStatus (db, table, params) {
+    const fields = Object.keys(params); // Assuming status is an object with field-value pairs
+    const placeholders = fields.map(field => `${field} = ?`).join(", ");
+    const values = Object.values(params);
+
+    const sql = `UPDATE ${table} SET ${placeholders} WHERE user_id = ?`;
+
+    return new Promise((resolve, reject) => {
+        db.run(sql, [...values], (err) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve()
+            }
+        });
+    });
+};
