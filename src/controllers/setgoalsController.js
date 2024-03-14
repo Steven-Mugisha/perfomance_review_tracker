@@ -4,7 +4,7 @@ const setGoals = async (req, res) => {
     const { body } = req;
 
     if (
-        !body.user_id ||
+        !body.user_name ||
         !body.title ||
         !body.description ||
         !body.start_date ||
@@ -24,7 +24,7 @@ const setGoals = async (req, res) => {
     }
 
     const newGoal = {
-        user_id: body.user_id,
+        user_name: body.user_name,
         title: body.title,
         description: body.description,
         start_date: body.start_date,
@@ -87,7 +87,17 @@ const addNotes = async (req, res) => {
     }
 }
 
+const getGoals = async (req, res) => {
+
+};
+
+const deleteGoals = async (req, res) => {
+
+};
+
 export default {
     setGoals,
-    addNotes
+    addNotes,
+    getGoals,
+    deleteGoals,
 };
