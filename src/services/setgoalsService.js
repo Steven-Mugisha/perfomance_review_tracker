@@ -14,36 +14,35 @@ const createGoal = async (newGoal) => {
         await goals.save();
 
     } catch(err) {
-        console.error(`Error connecting to database: ${err.message}`)
+        console.error(`Error inserting a new goal: ${err.message}`);
     }
 };
 
-// const addNotes =  async (notes) => {
+const getGoals = async (user_name) => {
+    try {
+        const goals = await performanceModel.find({ user_name: user_name }).exec();
+        return goals;
 
-//     try {
-//         let table = 'notes';
-//         const db = await createDbConnection(table);
-//         await writetoDB(db, "notes", notes)
+    } catch (err) {
+        console.error(`Error retreving from mongo: ${err.message}`);
+    }
 
-//     } catch (err) {
-//         console.error(`Error adding a note to a goal ${err.message}`);
-//     }
-// };
+};
 
-// const changeStatus = async (adjStatus) => {
+const addNotes = async (goalId, notes) => {
 
-//     try {
-//         let table = 'goals';
-//         const db = await createDbConnection(table);
-//         await adjustStatus(db, table, adjStatus)
-
-//     } catch(err) {
-//         console.error(`Error adjusting the goal status ${err.message}`);
-//     }
-// }
+    try {
+        const goal = await performanceModel.findOne({ _id: goalId }).exec();
+        goal.notes.push(notes);
+        await goal.save();
+    } catch (err) {
+        console.error(`Error adding notes to a goal: ${err.message}`);
+    }
+};
 
 export default {
     createGoal,
-    // addNotes,
+    getGoals,
+    addNotes,
     // changeStatus
  };

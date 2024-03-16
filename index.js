@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 8000;
 
 app.use(bodyParser.json())
 
-app.use("/api", getgoalsRoutes);
-app.use("/api", setgoalsRoutes);
+app.use("/api/v1", getgoalsRoutes);
+app.use("/api/v1", setgoalsRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

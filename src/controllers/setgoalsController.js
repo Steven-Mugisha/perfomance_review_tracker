@@ -2,7 +2,6 @@ import setgoalsService from "../services/setgoalsService.js";
 
 const setGoals = async (req, res) => {
     const { body } = req;
-
     if (
         !body.user_name ||
         !body.title ||
@@ -17,7 +16,7 @@ const setGoals = async (req, res) => {
             .send({
                 status: "FAILED",
                 data: {
-                    err: "One of the following keys is missing from the request body: title, description, start_date, target_date, priority, status.",
+                    err: "One of the following keys is missing from the request body.",
                 },
         });
         return;
@@ -35,11 +34,37 @@ const setGoals = async (req, res) => {
 
     try {
         const createdGoal = await setgoalsService.createGoal(newGoal);
-        res.status(201).send({status: "OK", data: createdGoal});
+        res.status(201).send({ status: "OK", data: createdGoal });
 
     } catch(err) {
         res
             .status(err?.status || 500)
+            .send({status: "FAILED", data: {err: err?.message || err}});
+    };
+};
+
+
+const getGoals = async (req, res) => {
+    const {params} = req;
+    if (!params.user_name) {
+        res
+            .status(400)
+            .send({
+                status: "FAILED",
+                data: {
+                    err: "The user_name key is missing from the request parameters.",
+                },
+        });
+        return;
+    }
+
+    try {
+        const goals = await setgoalsService.getGoals(params.user_name);
+        res.status(200).send({status: "OK", data: goals});
+
+    } catch(err) {
+        res
+            .status(err.status || 500)
             .send({status: "FAILED", data: {err: err?.message || err}});
     };
 };
@@ -87,17 +112,9 @@ const addNotes = async (req, res) => {
     }
 }
 
-const getGoals = async (req, res) => {
-
-};
-
-const deleteGoals = async (req, res) => {
-
-};
 
 export default {
     setGoals,
     addNotes,
     getGoals,
-    deleteGoals,
 };
